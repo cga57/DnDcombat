@@ -31,6 +31,8 @@ ac = [17,17]
 attackBonus = [7,8]
 damageBonus = [6,5]
 
+intiativeBonus = [2,2]
+
 level = [7,7]
 constitutionMod = [4,4]
 
@@ -101,6 +103,11 @@ def fighterGreatSwordAttack():
 	if tempHp[0] < 0:
 		hp[0] = hp[0] + tempHp[0]
 		tempHp[0] = 0
+
+#intiative
+intiative = [randint(1,20) + intiativeBonus[0] , randint(1,20) + intiativeBonus[1]]
+
+print "intiative" , intiative[0] , intiative[1]
 
 #COMBAT!
 ############################################
