@@ -2,6 +2,7 @@
 Dungeons & Dragons combat simulator
 By Josh Zhang
 
+CHIRAG WAS HERE
 Change log:
 2020/06/12
 potential feature: intiative, mutliple attacks a turn, great weapon fighting
