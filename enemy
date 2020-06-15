@@ -8,10 +8,26 @@ some functionality where the player actually gets some input
 where the encounters avalible change as your explore further and further
 weapon pickup, perks/skill, more encounters
 
+#Ty C.G.!!!
+wishlist: weapon pickup, peak/skill pickup, a second combat encounter, shops, food, gold, dialog
+
+2020.06.15
+Squash all bugs
+Make sure all variables get used at least once
+-
+weapon pickup
+perks
+-
+
+
+
+
 '''
+
+
 #setup
 import math
-import copy
+
 
 # generate random integer values
 from random import seed
@@ -23,136 +39,212 @@ from datetime import datetime
 random.seed(datetime.now())
 
 
-bool gameOn = true;
-#servant stats
-
-
-servantOpinion = 0
+#debug
+encounterTest = 0
 
 #basic combat stats
 #servant = 0 / enemy = 1
+
+#combat stats
 maxHp = [15,1]
+hp = [15,1]
 ac = [10,1]
-intiativeBonus = [3,1]
-attackBonus = [7,8]
-damageBonus = [6,5]
 
-#setting up variable with dummy numbers
+intiativeBonus = [2,1]
+attackBonus = [3,1]
+damageBonus = [3,1]
+
+#other stats
+servantOpinion = 0
+gold = 10
+global supplies
+supplies = 3
+
+#setup
+gameOn = 1
 initative = [0,0]
-
-hp = copy(maxHp)
-
 hit = 0
-
 encounterCount = 0
+finish = 0
 
-encounterFate = 0
-
-#basic combat functions
-#x = attackbonus
 # ALL FUNCTIONS
+
+#x = attackbonus
 def attack(x):
-	hit = randint(1,20)
-	return hit + x
+    hit = randint(1,20)
+    return hit + x
 
 def attackAdvantage(x):
-	hit = max(randint(1,20),randint(1,20))
-	return hit + x
+    hit = max(randint(1,20),randint(1,20))
+    return hit + x
 
 def attackDisadvantage(x):
-	hit = min(randint(1,20),randint(1,20))
-	return hit + x
+    hit = min(randint(1,20),randint(1,20))
+    return hit + x
 
-#weapons EDIT
-def greatSwordDamage(x):
-	return randint(1,6) + randint(1,6) + x
+#weapons
+def knifeDamage(x):
+    return randint(1,6) + randint(1,6) + x
 
-#encounters EDIT
+weapon = knifeDamage(damageBonus[0])
 
-def enemyTurn(enemyTurn):
-    switcher = {
-        1: wolfTurn(),
-        2: healingPool(),
-    }
-    switcher.get(enemyTurn)
+#servant's turn in combat - only modifier w/ perks
+def servantTurn():
+    if attack(attackBonus[0]) >= ac[1]:
+        hp[1] = hp[1] - weapon
+
+#battle - should not be modified
+def battle(enemyChoice):
+    initative[0] = randint(1,20) + intiativeBonus[0]
+    initative[1] = randint(1,20) + intiativeBonus[1]
+    while hp[0] > 0 and hp[1] > 0 and initative[0] > initative[1]:
+        servantTurn()
+        if hp[0] > 0 and hp[1] > 0:
+            enemyChoice
+    while hp[0] > 0 and hp[1] > 0 and initative[1] > initative[0]:
+        enemyChoice
+        if hp[0] > 0 and hp[1] > 0:
+            servantTurn()
 
 
+
+
+#Encounters (try to keep this alphabetical)
+
+#bandits
+def banditTurn():
+    if attack(attackBonus[1]) >= ac[0]:
+        hp[0] = hp[0] - randint(4,10)
+
+def banditEncounter():
+    global finish
+    finish = 0
+    global gold
+    while finish == 0:
+        intiativeBonus[1] = 3
+        hp[1] = 12
+        print "From the shadows a group of figures weilding knives and swords appear, blocking your path."
+        print "Your wallet or your life!"
+        print "To refuse and fight the bandits, enter 1"
+        print "To give up 10 gold in exchange for your life, enter 2"
+        s = raw_input()
+        if s == "1":
+            battle(banditTurn())
+            print "You chose to fight the bandits!"
+            print "You are left with", hp[0], "health"
+            finish = 1
+        elif s == "2":
+            if gold >= 10:
+                gold = gold - 10
+                print "You hand over the gold, and the bandits leave. You sigh, just glad to be alive."
+                finish = 1
+            else:
+                print "You don't have enough gold!"
+        else:
+            print "Invalid input, please try again"
+        
+
+#healing pool
+def healingPool():
+    print "Your lucky day! you found a healing pool!"
+    hp[0] = hp[0] + randint(3,6)
+    if hp[0] > maxHp[0]:
+        hp[0] = maxHp[0]
+    if hp[0] == maxHp[0]:
+        print "Your health has been fully restored!"
+    else:
+        print "Your health has been restored to" , hp[0]
+#wolf
+def wolfTurn():
+    if attack(attackBonus[1]) >= ac[0]:
+        hp[0] = hp[0] - randint(1,8)
 
 def wolfEncounter():
-	print "Wolves ambush you!"
-	intiativeBonus[1] = 1
-	hp[1] = 5
-	def wolfTurn():
-		if attack(attackBonus[1]) >= ac[0]:
-			hp[0] = hp[0] - randint(1,8)
-	enemyTurn() = 1
-	battle()
-	print "Your health has been reduced to", hp[0]
+    print "Wolves ambush you!"
+    intiativeBonus[1] = 1
+    hp[1] = 5
+    battle(wolfTurn())
+    print "You are left with", hp[0], "health"
 
 
-def healingPool():
-	print "Your lucky day! you found a healing pool!"
-	hp[0] = hp[0] + randint(3,6)
-	if hp[0] > maxHp[0]:
-		hp[0] = maxHp[0]
-	if hp[0] == maxHp[0]:
-		print "Your health has been fully restored!"
-	else:
-		print "Your health has been restored to" , hp[0]
 
-#turns in combat
-def servantTurn():
-	if attack(attackBonus[0]) >= ac[1]:
-		hp[1] = hp[1] - weapon
 
-# returns a random integer from some range 
-def randomEncounter(){
-	int random = randint(1,100)  # Change this to randint depending on how many enemies you have
-	if(random > 0 && random < 20):
-		return 1;
-	else if(random >= 20 && random < 100):
-		return 2;
-}
+#Determines what stage you are on and selects the odds for each encounter accordingly
+def encounterOdds():
+    global encounterCount
+    encounterCount = encounterCount + 1
 
-#battle
-def battle(enemyChoice):
-	initative[0] = randint(1,20) + intiativeBonus[0]
-	initative[1] = randint(1,20) + intiativeBonus[1]
-	while hp[0] > 0 and hp[1] > 0 and initative[0] > initative[1]:
-		servantTurn()
-		if hp[0] > 0 and hp[1] > 0:
-			enemyTurn(enemyChoice)
-	while hp[0] > 0 and hp[1] > 0 and initative[1] > initative[0]:
-		enemyTurn(enemyChoice)
-		if hp[0] > 0 and hp[1] > 0:
-			servantTurn()
-# RUNNING THE GAME ON
-bool initialization = true;
-while(gameOn):
-	if(initialization):
-		servantName = raw_input ("Catching your breath, you look up at your protector: ");
-		print "Your servant's name is " , servantName;
-	encounterCount++;
-	print "You are on encounter numuber", encounterCount;
-	battle(randomEncounter());
-	string s = raw_input();
-	if(encounterCount == 10 || s == "quit"):
-		gameOn = false;
-	
+    if encounterTest == 1:
+        encounterFateTest()
+    else:
+        stage = 1
+        
+        if encounterCount == 3:
+            stage = 2
+        
+        if stage == 1:
+            encounterFate1()
+        elif stage == 2:
+            encounterFate2()
 
-''' DONT NEED THIS ANYMORE
-while encounterCount < 10 and hp[0] > 0:
-	encounterCount = encounterCount + 1
-	print "You are on encounter numuber", encounterCount
-	encounterFate = randint(1,20)
-	if encounterFate > 15:
-		healingPool()
-	else:
-		wolfEncounter()
-	
-printing results
-if hp[1] <= 0:
-	print "Victory!"
-if hp[0] <= 0:
-	print "You have been slain..."
-'''
+#controls the odds of getting each event depending on how far you have made it
+def encounterFateTest():
+    banditEncounter()
+
+def encounterFate1():
+    fate = randint(1,100)
+    if fate > 0 and fate < 50:
+        wolfEncounter()
+    elif fate >= 50 and fate < 100:
+        healingPool()
+    print "fate" , fate
+
+def encounterFate2():
+    fate = randint(1,100)
+    if fate > 30 and fate < 80:
+        wolfEncounter()
+    elif fate >= 80 and fate < 100:
+        healingPool()
+    elif fate > 0 and fate <= 30:
+        banditEncounter()
+    print "fate" , fate
+
+# RUNNING THE GAME, gameOn = 1
+while(gameOn) == 1:
+    if hp[0] <= 0:
+        print "You have been slain..."
+        gameOn = 0
+    if encounterCount == 5:
+        print "You have completed your quest!"
+        gameOn = 0
+    if gameOn == 1:
+        print "_______________________"
+        print "You are on encounter numuber", encounterCount;
+        print "To continue on your adventure enter 1"
+        print "To rest and recovery help at the cost of supplies, enter 2"
+        print "To see your stats enter 3"
+        print "To quit the game enter 4"
+        s = raw_input()
+        if s == "1":
+            encounterOdds()
+        elif s == "2":
+            if supplies >= 1:
+                print "You spend a few days resting and recover from your wounds. You use up some excess supplies"
+                supplies = supplies - 1
+                print "You have" , supplies , "supplies remaining"
+                hp[0] = hp[0] + 5
+                if hp[0] > maxHp[0]:
+                    hp[0] = maxHp[0]
+                if hp[0] == maxHp[0]:
+                    print "Your health has been fully restored!"
+                else:
+                    print "Your health has been restored to" , hp[0]
+            else:
+                print "You don't have any excess supplies and must press on!"
+        elif s == "3":
+            print "Gold =", gold, "Supplies =", supplies
+        elif s == "4":
+            print "You have quit the game"
+            gameOn = 0
+        else:
+            print "Invalid input, please try again"
