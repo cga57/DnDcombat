@@ -1,0 +1,148 @@
+'''
+Dungeon exploration thing
+By Josh Zhang
+2020.06.14
+Added the basics. Basic exploration and combat has been added
+Dealt with annoying bug where maxhp kept changing to match hp (healing pool)
+some functionality where the player actually gets some input
+where the encounters avalible change as your explore further and further
+weapon pickup, perks/skill, more encounters
+
+'''
+#setup
+import math
+import copy
+
+# generate random integer values
+from random import seed
+from random import randint
+
+# seed random number generator
+import random
+from datetime import datetime
+random.seed(datetime.now())
+
+
+
+#servant stats
+servantName = raw_input ("Catching your breath, you look up at your protector: ")
+
+print "Your servant's name is " , servantName
+
+servantOpinion = 0
+
+#basic combat stats
+#servant = 0 / enemy = 1
+maxHp = [15,1]
+ac = [10,1]
+intiativeBonus = [3,1]
+attackBonus = [7,8]
+damageBonus = [6,5]
+
+#setting up variable with dummy numbers
+initative = [0,0]
+
+hp = copy(maxHp)
+
+hit = 0
+
+encounterCount = 0
+
+encounterFate = 0
+
+#basic combat functions
+#x = attackbonus
+def attack(x):
+	hit = randint(1,20)
+	return hit + x
+
+def attackAdvantage(x):
+	hit = max(randint(1,20),randint(1,20))
+	return hit + x
+
+def attackDisadvantage(x):
+	hit = min(randint(1,20),randint(1,20))
+	return hit + x
+
+#weapons EDIT
+def greatSwordDamage(x):
+	return randint(1,6) + randint(1,6) + x
+
+weapon = greatSwordDamage(damageBonus[0])
+
+#encounters EDIT
+
+def enemyTurn(enemyTurn):
+    switcher = {
+        1: wolfTurn(),
+        2: "February",
+        3: "March",
+        4: "April",
+        5: "May",
+        6: "June",
+        7: "July",
+        8: "August",
+        9: "September",
+        10: "October",
+        11: "November",
+        12: "December"
+    }
+    switcher.get(enemyTurn)
+
+
+
+def wolfEncounter():
+	print "Wolves ambush you!"
+	intiativeBonus[1] = 1
+	hp[1] = 5
+	def wolfTurn():
+		if attack(attackBonus[1]) >= ac[0]:
+			hp[0] = hp[0] - randint(1,8)
+	enemyTurn() = 1
+	battle()
+	print "Your health has been reduced to", hp[0]
+
+switch_demo = 
+
+def healingPool():
+	print "Your lucky day! you found a healing pool!"
+	hp[0] = hp[0] + randint(3,6)
+	if hp[0] > maxHp[0]:
+		hp[0] = maxHp[0]
+	if hp[0] == maxHp[0]:
+		print "Your health has been fully restored!"
+	else:
+		print "Your health has been restored to" , hp[0]
+
+#turns in combat
+def servantTurn():
+	if attack(attackBonus[0]) >= ac[1]:
+		hp[1] = hp[1] - weapon
+
+#battle
+def battle():
+	initative[0] = randint(1,20) + intiativeBonus[0]
+	initative[1] = randint(1,20) + intiativeBonus[1]
+	while hp[0] > 0 and hp[1] > 0 and initative[0] > initative[1]:
+		servantTurn()
+		if hp[0] > 0 and hp[1] > 0:
+			enemyTurn()
+	while hp[0] > 0 and hp[1] > 0 and initative[1] > initative[0]:
+		enemyTurn()
+		if hp[0] > 0 and hp[1] > 0:
+			servantTurn()
+
+while encounterCount < 10 and hp[0] > 0:
+	encounterCount = encounterCount + 1
+	print "You are on encounter numuber", encounterCount
+	encounterFate = randint(1,20)
+	if encounterFate > 15:
+		healingPool()
+	else:
+		wolfEncounter()
+	
+#printing results
+if hp[1] <= 0:
+	print "Victory!"
+if hp[0] <= 0:
+	print "You have been slain..."
