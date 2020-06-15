@@ -8,7 +8,7 @@ some functionality where the player actually gets some input
 where the encounters avalible change as your explore further and further
 weapon pickup, perks/skill, more encounters
 
-#Ty C.G.!!!
+Ty C.G.!!!
 wishlist: weapon pickup, peak/skill pickup, a second combat encounter, shops, food, gold, dialog
 
 2020.06.15
@@ -17,10 +17,8 @@ Make sure all variables get used at least once
 -
 weapon pickup
 perks
+combat narrated turn by turn
 -
-
-
-
 
 '''
 
@@ -107,8 +105,6 @@ def battle(enemyChoice):
             servantTurn()
 
 
-
-
 #Encounters (try to keep this alphabetical)
 
 #bandits
@@ -167,8 +163,6 @@ def wolfEncounter():
     print "You are left with", hp[0], "health"
 
 
-
-
 #Determines what stage you are on and selects the odds for each encounter accordingly
 def encounterOdds():
     global encounterCount
@@ -221,7 +215,7 @@ while(gameOn) == 1:
         print "_______________________"
         print "You are on encounter numuber", encounterCount;
         print "To continue on your adventure enter 1"
-        print "To rest and recovery help at the cost of supplies, enter 2"
+        print "To rest and recovery health at the cost of supplies, enter 2"
         print "To see your stats enter 3"
         print "To quit the game enter 4"
         s = raw_input()
