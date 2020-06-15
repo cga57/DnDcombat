@@ -23,11 +23,9 @@ from datetime import datetime
 random.seed(datetime.now())
 
 
-
+bool gameOn = true;
 #servant stats
-servantName = raw_input ("Catching your breath, you look up at your protector: ")
 
-print "Your servant's name is " , servantName
 
 servantOpinion = 0
 
@@ -52,6 +50,7 @@ encounterFate = 0
 
 #basic combat functions
 #x = attackbonus
+# ALL FUNCTIONS
 def attack(x):
 	hit = randint(1,20)
 	return hit + x
@@ -68,24 +67,12 @@ def attackDisadvantage(x):
 def greatSwordDamage(x):
 	return randint(1,6) + randint(1,6) + x
 
-weapon = greatSwordDamage(damageBonus[0])
-
 #encounters EDIT
 
 def enemyTurn(enemyTurn):
     switcher = {
         1: wolfTurn(),
-        2: "February",
-        3: "March",
-        4: "April",
-        5: "May",
-        6: "June",
-        7: "July",
-        8: "August",
-        9: "September",
-        10: "October",
-        11: "November",
-        12: "December"
+        2: healingPool(),
     }
     switcher.get(enemyTurn)
 
@@ -102,7 +89,6 @@ def wolfEncounter():
 	battle()
 	print "Your health has been reduced to", hp[0]
 
-switch_demo = 
 
 def healingPool():
 	print "Your lucky day! you found a healing pool!"
@@ -119,19 +105,42 @@ def servantTurn():
 	if attack(attackBonus[0]) >= ac[1]:
 		hp[1] = hp[1] - weapon
 
+# returns a random integer from some range 
+def randomEncounter(){
+	int random = randint(1,100)  # Change this to randint depending on how many enemies you have
+	if(random > 0 && random < 20):
+		return 1;
+	else if(random >= 20 && random < 100):
+		return 2;
+}
+
 #battle
-def battle():
+def battle(enemyChoice):
 	initative[0] = randint(1,20) + intiativeBonus[0]
 	initative[1] = randint(1,20) + intiativeBonus[1]
 	while hp[0] > 0 and hp[1] > 0 and initative[0] > initative[1]:
 		servantTurn()
 		if hp[0] > 0 and hp[1] > 0:
-			enemyTurn()
+			enemyTurn(enemyChoice)
 	while hp[0] > 0 and hp[1] > 0 and initative[1] > initative[0]:
-		enemyTurn()
+		enemyTurn(enemyChoice)
 		if hp[0] > 0 and hp[1] > 0:
 			servantTurn()
+# RUNNING THE GAME ON
+bool initialization = true;
+while(gameOn):
+	if(initialization):
+		servantName = raw_input ("Catching your breath, you look up at your protector: ");
+		print "Your servant's name is " , servantName;
+	encounterCount++;
+	print "You are on encounter numuber", encounterCount;
+	battle(randomEncounter());
+	string s = raw_input();
+	if(encounterCount == 10 || s == "quit"):
+		gameOn = false;
+	
 
+''' DONT NEED THIS ANYMORE
 while encounterCount < 10 and hp[0] > 0:
 	encounterCount = encounterCount + 1
 	print "You are on encounter numuber", encounterCount
@@ -141,8 +150,9 @@ while encounterCount < 10 and hp[0] > 0:
 	else:
 		wolfEncounter()
 	
-#printing results
+printing results
 if hp[1] <= 0:
 	print "Victory!"
 if hp[0] <= 0:
 	print "You have been slain..."
+'''
