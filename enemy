@@ -1,3 +1,5 @@
+
+  
 '''
 Dungeon exploration thing
 By Josh Zhang
@@ -187,24 +189,34 @@ def encounterFateTest():
 
 def encounterFate1():
     fate = randint(1,100)
-    if fate > 0 and fate < 50:
+    if fate > 0 and fate < 75:
         wolfEncounter()
-    elif fate >= 50 and fate < 100:
+    elif fate >= 75 and fate < 100:
         healingPool()
     print "fate" , fate
 
 def encounterFate2():
     fate = randint(1,100)
-    if fate > 30 and fate < 80:
+    if fate > 30 and fate < 90:
         wolfEncounter()
-    elif fate >= 80 and fate < 100:
+    elif fate >= 90 and fate < 100:
         healingPool()
     elif fate > 0 and fate <= 30:
         banditEncounter()
     print "fate" , fate
 
+initialization = 0
+
+def initializationCheck():
+    global initialization
+    if initialization == 0:
+        print "You are a merchant who got seperated from their caravan"
+        print "Now you must make your way back to safety with limited supplies and danger lurking at every turn"
+        initialization = 1
+
 # RUNNING THE GAME, gameOn = 1
 while(gameOn) == 1:
+    initializationCheck()
     if hp[0] <= 0:
         print "You have been slain..."
         gameOn = 0
@@ -242,3 +254,4 @@ while(gameOn) == 1:
             gameOn = 0
         else:
             print "Invalid input, please try again"
+
