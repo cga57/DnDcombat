@@ -97,7 +97,7 @@ def servantTurn():
 def battle(enemyChoice):
     initative[0] = randint(1,20) + intiativeBonus[0]
     initative[1] = randint(1,20) + intiativeBonus[1]
-    while hp[0] > 0 and hp[1] > 0 and initative[0] > initative[1]:
+    while hp[0] > 0 and hp[1] > 0 and initative[0] >= initative[1]:
         servantTurn()
         if hp[0] > 0 and hp[1] > 0:
             enemyChoice
