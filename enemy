@@ -27,14 +27,13 @@ combat narrated turn by turn
 
 #setup
 import math
-
-
+import random
 # generate random integer values
 from random import seed
 from random import randint
 
 # seed random number generator
-import random
+
 from datetime import datetime
 random.seed(datetime.now())
 
@@ -68,7 +67,7 @@ foeDefense = 1
 # ALL FUNCTIONS
 
 #battle - should not be modified
-def battle(enemyChoice):
+def battle(getRidOf):
 	playerCombatOffense = playerOffense - foeDefense
 	foeCombatOffense = foeOffense - playerDefense
 
@@ -122,7 +121,7 @@ To give up 10 gold in exchange for your life, enter 2
                 print "You don't have enough gold!"
         else:
             print "Invalid input, please try again"
-
+	return 1;
 def farmerTurn():
 	foeOffense = 1
 	foeDefense = 1
@@ -159,7 +158,7 @@ You grip the axe handle and rush for the doorway.
         	'''
     elif s == "2":
         print "You creep back out of the farmhouse, not wishing to hamper an innocent familly's chance of survival."
-        
+        return 2;
 
 #healing pool
 def healingPool():
@@ -171,6 +170,7 @@ def healingPool():
         print "Your health has been fully restored!"
     else:
         print "Your health has been restored to" , hp[0]
+	return 3;
 #wolf
 def wolfTurn():
     foeOffense = 1
@@ -181,9 +181,11 @@ def wolfEncounter():
     hp[1] = 5
     battle(wolfTurn())
     print "You are left with", hp[0], "health"
+    return 4;
+    
 
 #encounter list setup
-encounterList = [banditEncounter(), farmHouse(), healingPool(), wolfEncounter()]
+encounterList = [banditEncounter(), farmHouse(), healingPool(), wolfEncounter()] # 1,2,3,4
 
 #Determines what stage you are on and selects the odds for each encounter accordingly
 def encounterOdds():
@@ -199,9 +201,22 @@ def encounterOdds():
 			encounterFateTest()
     
     	else:
-    		encounterChoice() = randomchoice(encounterList)
-    		encounterChoice()
-    		encounterList.remove(encounterChoice())
+    		# encounterChoice() = random.choice(encounterList)
+		functionChoice = random.choice(encounterList);
+		for(int i = 0; i < encounterList.size(); i++){
+			if(functionChoice == 1): #banditEncounter
+				encounterList.remove(banditEncounter());
+			
+			elif(functionChoice == 2): #farmHouse
+				encounterList.remove(farmHouse());
+			
+			elif(functionChoice == 3): #healingPool
+				encounterList.remove(healingPool());
+			
+			elif(functionChoice == 4): #wolfEncounter
+				encounterList.remove(wolfEncounter);
+			
+		}
 
 
 #controls the odds of getting each event depending on how far you have made it
