@@ -22,6 +22,12 @@ perks
 combat narrated turn by turn
 -
 
+2020.06.27
+Some major shifts on the back end for combat.
+Shifted away from it's D&D orgins to be more a story based game.
+The front end user experience hasn't changed much.
+However the final objective this game has.
+
 '''
 
 
@@ -39,7 +45,7 @@ random.seed(datetime.now())
 
 
 #debug
-encounterTest = 1
+encounterTest = 0
 
 #basic combat stats
 #servant = 0 / enemy = 1
@@ -55,7 +61,7 @@ supplies = 3
 
 #setup
 gameOn = 1
-encounterCount = 0
+encounterCount = 1
 finish = 0
 distanceTraveled = 0
 
@@ -68,26 +74,26 @@ foeDefense = 1
 
 #battle - should not be modified
 def battle(getRidOf):
-	playerCombatOffense = playerOffense - foeDefense
-	foeCombatOffense = foeOffense - playerDefense
+    playerCombatOffense = playerOffense - foeDefense
+    foeCombatOffense = foeOffense - playerDefense
 
-	if playerCombatOffense == 0:
-		playerAttack = randint(1,4)
-	elif playerCombatOffense == 1:
-		playerAttack = randint(2,6)
+    if playerCombatOffense == 0:
+        playerAttack = randint(1,4)
+    elif playerCombatOffense == 1:
+        playerAttack = randint(2,6)
 
-	if foeCombatOffense == 0:
-		foeAttack = randint(1,4)
-	elif foeCombatOffense == 1:
-		foeAttack = randint(2,6)
-
-
-	while hp[0] > 0 and hp[1] > 0:
-		hp[1] = hp [1] - playerAttack
-		hp[0] = hp[0] - foeAttack
+    if foeCombatOffense == 0:
+        foeAttack = randint(1,4)
+    elif foeCombatOffense == 1:
+        foeAttack = randint(2,6)
 
 
-#Encounters (try to keep this alphabetical)
+    while hp[0] > 0 and hp[1] > 0:
+        hp[1] = hp [1] - playerAttack
+        hp[0] = hp[0] - foeAttack
+
+
+#Encounters
 
 #bandits
 def banditTurn():
@@ -101,7 +107,7 @@ def banditEncounter():
     while finish == 0:
         hp[1] = 12
         print '''
-From the shadows a group of figures weilding knives and swords appear, blocking your path."
+From the shadows, a group of figures weilding knives and swords appear, blocking your path."
 "Your wallet or your life!"
 To refuse and fight the bandits, enter 1
 To give up 10 gold in exchange for your life, enter 2
@@ -121,10 +127,12 @@ To give up 10 gold in exchange for your life, enter 2
                 print "You don't have enough gold!"
         else:
             print "Invalid input, please try again"
-	return 1;
+    return 1;
+
+#farmHouse
 def farmerTurn():
-	foeOffense = 1
-	foeDefense = 1
+    foeOffense = 1
+    foeDefense = 1
 
 def farmHouse():
     print '''
@@ -144,18 +152,18 @@ To try and run for it, enter 2
         playerOffense = 2
         s = raw_input()
         if s == "1":
-        	print '''
+            print '''
 You wrap one hand around the woman's mouth muffling her cries. You then sink the tip of hte axe blade into her neck. She squirms against your grip but her struggle quickly weaken.
 You see the light go out of her eyes. The dwarf next to her, you assume her husband sturs in his sleep. You let go of her body and quickly make for the front door.
 However you only make it halfway door the stairs when you hear a cry of anguish from the bedroom.
 "Faith, Faith my dear please, open you eyes!" This is followed by sobs followed the sound of a pair of feet thuding rapidly towards you.
 "You twisted son a bitch, I'll kill you!"
 As you run, you glance in the door next to you and see a bunh bed, and two small figures under the blankets.
-        	'''
+            '''
         elif s == "2":
-        	print '''
+            print '''
 You grip the axe handle and rush for the doorway.
-        	'''
+            '''
     elif s == "2":
         print "You creep back out of the farmhouse, not wishing to hamper an innocent familly's chance of survival."
         return 2;
@@ -170,7 +178,9 @@ def healingPool():
         print "Your health has been fully restored!"
     else:
         print "Your health has been restored to" , hp[0]
-	return 3;
+    return 3;
+
+
 #wolf
 def wolfTurn():
     foeOffense = 1
@@ -185,61 +195,38 @@ def wolfEncounter():
     
 
 #encounter list setup
-encounterList = [banditEncounter(), farmHouse(), healingPool(), wolfEncounter()] # 1,2,3,4
+encounterList = [1,2,3,4] # 1,2,3,4
+
 
 #Determines what stage you are on and selects the odds for each encounter accordingly
 def encounterOdds():
-	global encounterCount
-	distanceTraveled = randint(1,10)
-	encounterCount = encounterCount + distanceTraveled
-
-	print "You have made it", distanceTraveled, "miles further."
+    global encounterCount
+    encounterCount = encounterCount + 1
 
 
-	if encounterCount < 100:
-		if encounterTest == 1:
-			encounterFateTest()
+    if encounterCount < 100:
+        if encounterTest == 1:
+            encounterFateTest()
     
-    	else:
-    		# encounterChoice() = random.choice(encounterList)
-		functionChoice = random.choice(encounterList);
-		for(int i = 0; i < encounterList.size(); i++){
-			if(functionChoice == 1): #banditEncounter
-				encounterList.remove(banditEncounter());
-			
-			elif(functionChoice == 2): #farmHouse
-				encounterList.remove(farmHouse());
-			
-			elif(functionChoice == 3): #healingPool
-				encounterList.remove(healingPool());
-			
-			elif(functionChoice == 4): #wolfEncounter
-				encounterList.remove(wolfEncounter);
-			
-		}
+        else:
+			x = random.choice(encounterList)
+			if x == 1:
+				banditEncounter()
+				encounterList.remove(1)
+			elif x == 2:
+				farmHouse()
+				encounterList.remove(2)
+			elif x == 3:
+				healingPool()
+				encounterList.remove(3)
+			elif x == 4:
+				wolfEncounter()
+				encounterList.remove(4)
 
 
-#controls the odds of getting each event depending on how far you have made it
+#debug
 def encounterFateTest():
     banditEncounter()
-
-def encounterFate1():
-    fate = randint(1,100)
-    if fate > 0 and fate < 75:
-        wolfEncounter()
-    elif fate >= 75 and fate < 100:
-        healingPool()
-    print "fate" , fate
-
-def encounterFate2():
-    fate = randint(1,100)
-    if fate > 30 and fate < 90:
-        wolfEncounter()
-    elif fate >= 90 and fate < 100:
-        healingPool()
-    elif fate > 0 and fate <= 30:
-        banditEncounter()
-    print "fate" , fate
 
 initialization = 0
 
@@ -263,7 +250,7 @@ while(gameOn) == 1:
     if hp[0] <= 0:
         print "You have been slain..."
         gameOn = 0
-    if encounterCount == 30:
+    if encounterCount == 4: #this number should be one greater than the number of desired encounters
         print "You have completed your quest!"
         gameOn = 0
     if gameOn == 1:
@@ -299,4 +286,3 @@ To quit the game enter 4
             gameOn = 0
         else:
             print "Invalid input, please try again"
-
