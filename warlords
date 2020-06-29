@@ -1,0 +1,205 @@
+'''
+Warlords
+By Josh Zhang
+2020/06/21
+How do I have it so that once atleast, say 2, towers are destoyed the game ends?
+For that matter how do I receive commands for which lane to deploy in?
+
+Just do p1 fisrt, then add p2 after everything works
+
+gotta add for the units in each lane to actually do damamge each turn, currently the while loop doesn't have any side taking damage
+
+There also probably should be a way ato check all the stats
+
+Note that defense and resistance stats don't go dont naturally. So stacking these becomes really strong late game
+However obviously hp should be lower at that point so... this is nice
+Could create some diffrent stratergies, some just build up physcial and magical attacks early
+Others build up defense to be OP late game
+
+2020/06/29
+Okay redo. I like the whole building up defenses for late game idea, but having multiple lanes is too complicated right now.
+MASSIVE REDO
+'''
+import math
+
+#p1 setup stats
+hp_p1 = 20
+physcial_defense_p1 = 0
+magical_defense_p1 = 0
+
+#p1 deployment stats
+physcial_attack_p1 = 0
+magical_attack_p1 = 0
+true_damage_p1 = 0
+physcial_defense_addition_p1 = 0
+magical_defense_addition_p1 = 0
+deployment_time_p1 = 0
+
+#p2 setup stats
+hp_p2 = 20
+physcial_defense_p2 = 0
+magical_defense_p2 = 0
+
+#p2 deployment stats
+physcial_attack_p2 = 0
+magical_attack_p2 = 0
+true_damage_p2 = 0
+physcial_defense_addition_p2 = 0
+magical_defense_addition_p2 = 0
+deployment_time_p2 = 0
+
+
+#misc setup
+temp_physical_attack = 0
+temp_magical_attack = 0
+temp_true_damage = 0
+temp_physcial_defense_addition = 0
+temp_magical_defense_addition = 0
+temp_deployment_time = 0
+
+
+
+#all types of troops
+#spearmen
+def spearmen():
+	global temp_physical_attack
+	global temp_magical_attack 
+	global temp_true_damage
+	global temp_physcial_defense_addition
+	global temp_magical_defense
+	global temp_deployment_time 
+
+	temp_physical_attack = 3
+	temp_magical_attack = 3
+	temp_true_damage = 3
+	temp_physcial_defense_addition = 1
+	temp_magical_defense = 1
+	temp_deployment_time = 3
+
+def swordsmen():
+	global temp_physical_attack
+	global temp_magical_attack 
+	global temp_true_damage
+	global temp_physcial_defense_addition
+	global temp_magical_defense
+	global temp_deployment_time 
+
+	temp_physical_attack = 5
+	temp_magical_attack = 5
+	temp_true_damage = 3
+	temp_physcial_defense_addition = 1
+	temp_magical_defense = 1
+	temp_deployment_time = 4
+
+#updating whichunit is being deployed for p1
+def updating_deployment_p1():
+	global physcial_attack_p1
+	global magical_attack_p1
+	global true_damage_p1
+	global physcial_defense_addition_p1
+	global magical_defense_addition_p1
+	global deployment_time_p1
+
+	physcial_attack_p1 = temp_physical_attack
+	magical_attack_p1 = temp_magical_attack
+	true_damage_p1 = temp_true_damage
+	physcial_defense_addition_p1 = temp_physcial_defense_addition
+	magical_defense_addition_p1 = temp_magical_defense_addition
+	deployment_time_p1 = temp_deployment_time
+
+#updating whichunit is being deployed for p2
+def updating_deployment_p2():
+	global physcial_attack_p2
+	global magical_attack_p2
+	global true_damage_p2
+	global physcial_defense_addition_p2
+	global magical_defense_addition_p2
+	global deployment_time_p2
+
+	physcial_attack_p2 = temp_physical_attack
+	magical_attack_p2 = temp_magical_attack
+	true_damage_p2 = temp_true_damage
+	physcial_defense_addition_p2 = temp_physcial_defense_addition
+	magical_defense_addition_p2 = temp_magical_defense_addition
+	deployment_time_p2 = temp_deployment_time
+
+
+
+#Introduction:
+print "Welcome to Warlords!"
+
+
+while hp_p1 > 0 and hp_p2 > 0:
+	if deployment_time_p1 <= 0:
+		p1_selecting = 1
+		while p1_selecting == 1:
+			print "P1, what unit would you like to deploy?"
+			p1_input = raw_input()
+			if p1_input == "spearmen":
+				spearmen()
+				p1_selecting = 0
+				
+			elif p1_input == "swordsmen":
+				swordsmen()
+				p1_selecting = 0
+			
+			updating_deployment_p1()
+			print "P1 has deployed", p1_input
+
+
+	if deployment_time_p2 <= 0:
+		p2_selecting = 1
+		while p2_selecting == 1:
+			print "P2, what unit would you like to deploy?"
+			p2_input = raw_input()
+			if p2_input == "spearmen":
+				spearmen()
+				p2_selecting = 0
+
+			elif p2_input == "swordsmen":
+				swordsmen()
+				p2_selecting = 0
+
+			updating_deployment_p2()
+			print "P2 has deployed", p2_input
+
+
+	deployment_time_p1 = deployment_time_p1 - 1
+	deployment_time_p2 = deployment_time_p2 - 1
+
+
+	if deployment_time_p1 <= 0:
+		print "deploying", p1_input, "for p1!"
+
+		hp_p2 = hp_p2 - physcial_attack_p1 * ((100 - physcial_defense_p2)/100)
+		hp_p2 = hp_p2 - magical_attack_p1 * ((100 - magical_defense_p2)/100)
+		hp_p2 = hp_p2 - true_damage_p1
+		physcial_defense_p1 = physcial_defense_p1 + physcial_defense_addition_p1
+		magical_defense_p1 = magical_defense_p1 + magical_defense_addition_p1
+
+		print "p1hp" , hp_p1
+		print "p2hp" , hp_p2
+		print "deployment_time_p2", deployment_time_p2
+
+	if deployment_time_p2 <= 0:
+		print "deploying", p2_input, "for p2!"
+
+		hp_p1 = hp_p1 - physcial_attack_p2 * ((100 - physcial_defense_p1)/100)
+		hp_p1 = hp_p1 - magical_attack_p2 * ((100 - magical_defense_p1)/100)
+		hp_p1 = hp_p1 - true_damage_p2
+		physcial_defense_p2 = physcial_defense_p2 + physcial_defense_addition_p2
+		magical_defense_p2 = magical_defense_p2 + magical_defense_addition_p2
+
+		print "p1hp" , hp_p1
+		print "p2hp" , hp_p2
+		print "deployment_time_p1", deployment_time_p1
+
+
+#conclusion
+print "The game is over!"
+if hp_p1 > 0:
+	print "P1 is victorious!"
+elif hp_p2 > 0:
+	print "P2 is victorious!"
+else:
+	print "Both sides have been destroyed!"
