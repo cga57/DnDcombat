@@ -20,6 +20,39 @@ Others build up defense to be OP late game
 Okay redo. I like the whole building up defenses for late game idea, but having multiple lanes is too complicated right now.
 MASSIVE REDO
 '''
+''' Made By Chirag '''
+class Troop:
+  attack = 0
+  magical_attack = 0
+  defense = 0
+  hp = 0
+  def __init__(self, attack, magical_attack, defense, hp):
+    self.attack = attack
+    self.defense = defense
+    self.hp = hp
+  def attack(self, opponent):
+    opponent.hp = opponent.hp - self.attack1;
+  
+  
+class Swordsman(Troop):
+
+  def doubleAttack():
+    self.attack *= 2
+  def __init__(self):
+    attack = 80;
+    defense = 80;
+    hp = 80;
+
+
+
+
+a = Troop(50, 20, 80);
+b = Troop(20,30, 80);
+b.attack(a);
+c = Swordsman();
+
+
+
 import math
 
 #p1 setup stats
